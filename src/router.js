@@ -21,9 +21,9 @@ import shopping_car from './components/main/shopping_car.vue'
 import Details from './components/main/jiulei/Details.vue'
 Vue.use(Router)
 
-export default new Router({
+let  router =  new Router({
   routes: [{
-      path: '/',
+      path: '/home',
       name: 'home',
       component: Home
     },
@@ -153,6 +153,9 @@ export default new Router({
       path: '/shopping_car',
       name: 'shopping_car',
       component: shopping_car,
+    },{
+      path:'/',
+      redirect:'/home'
     }
   ]
 })
@@ -160,30 +163,31 @@ export default new Router({
 
 // 要进入路由，都要先通过这个守卫
 
-// router.beforeEach(async (to, from, next) => {
-//   const data = await axios.post('"http://localhost:3000/login?username=" + this.username', {
-//       params: {
-//           // 存在cookie里面
-//           // 用token代替你的用户名和密码
-//           token: 'ahsdioasydhkaujhdaskj'
-//       }
-//   })
-//   let isLogin = data.data.data.status
-//   // 如果你没登陆你就进sign
-//   // 如果你登陆 next
+router.beforeEach(async (to, from, next) => {
+  function  getCookie(key) {//获取cookie值
+    var cookies = document.cookie;//name=malin; pwd=123456
+    var arr = cookies.split('; ');//['name=malin','pwd=123456']
+    for(var i = 0; i < arr.length; i++){ 
+        var arr2 = arr[i].split('=');//['name','malin'
+        if(key == arr2[0]) {  
+            return arr2[1];
+        }
+    };
+}
+  let isLogin = getCookie('isLogin');
 
-//   // 如果你登陆了你就next
-//   // 或者你就要去登陆页，你也可以next
+  // 如果你登陆了你就next
+  // 或者你就要去登陆页，你也可以next
 
-//   // 如果你是首页，详情页，登录页或者你登陆了，都可以进去，否则不给你进去
-//   if (isLogin || to.path === '/shopping_car' || to.path === '/tabbar/home' || to.name === 'detail') {
-//       next()
-//   } else {
-//       // 编程式导航
-//       router.push({
-//           name: 'shopping_car'
-//       })
-//   }
+  // 如果你是首页，详情页，登录页或者你登陆了，都可以进去，否则不给你进去
+  if (isLogin || to.path!=="/shopping_car" || to.path === '/login') {
+      next()
+  } else {
+      // 编程式导航
+      router.push({
+          name: 'login'
+      })
+  }
 
-// })
-// export default router
+})
+export default router

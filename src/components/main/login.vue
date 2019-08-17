@@ -62,6 +62,12 @@ export default {
     Ret() {
       this.$router.push({ name: "my" });
     },
+    setCookie(key,val,iDay) {
+    //key：键名；val：键值；iDay：失效时间
+    var now = new Date();
+    now.setDate(now.getDate() + iDay);
+    document.cookie = key + '=' + val + ';expires=' + now.toUTCString() + ';path=/';//设置一个站点内的文件可以共享此cookie
+},
     randcode() {
       var reg = /^1[3-9]\d{9}$/;
       if (reg.test(this.username)) {
@@ -124,7 +130,9 @@ export default {
             if (data.data == "") {
               _this.$router.push({ name: "reg" });
             } else {
+              _this.setCookie("isLogin",true,1)
               _this.$router.push({ name: "home" });
+              
             }
           });
       }
